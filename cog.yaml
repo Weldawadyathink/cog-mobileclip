@@ -1,20 +1,30 @@
-build:
-  cuda: "11.3"
-  gpu: true
-  python_version: "3.8"
-  system_packages:
-    - "libgl1-mesa-glx"
-    - "libglib2.0-0"
-  python_packages:
-    - "transformers==4.19.2"
-    - "Pillow==9.2.0"
-    - "requests==2.28.1"
-  run:
-    - pip install torch==1.10.0+cu113 torchvision==0.11.1+cu113 -f https://download.pytorch.org/whl/torch_stable.html
-    - curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && apt-get install -y git-lfs
-    - git clone https://huggingface.co/openai/clip-vit-large-patch14 /weights
-    - cd weights && git lfs pull
+# Configuration for Cog ⚙️
+# Reference: https://cog.run/yaml
 
+build:
+  # set to true if your model requires a GPU
+  gpu: false
+
+  # a list of ubuntu apt packages to install
+  # system_packages:
+  #   - "libgl1-mesa-glx"
+  #   - "libglib2.0-0"
+
+  # python version in the form '3.11' or '3.11.4'
+  python_version: "3.11"
+
+  # path to a Python requirements.txt file
+  python_requirements: requirements.txt
+
+  # enable fast boots
+  fast: true
+
+  # commands run after the environment is setup
+  # run:
+  #   - "echo env is ready!"
+  #   - "echo another command if needed"
+
+# predict.py defines how predictions are run on your model
 predict: "predict.py:Predictor"
 
-image: "r8.im/andreasjansson/clip-features"
+image: "r8.im/weldawadyathink/mobileclip"
