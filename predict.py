@@ -12,12 +12,8 @@ class Predictor(cog.BasePredictor):
         predictions efficient.
         """
         print("Loading OpenCLIP model...")
-        # You can choose different models and pretrained weights here.
-        # Check https://github.com/mlfoundations/open_clip for available models.
-        # Example: "ViT-L-14", "openai" for original CLIP
-        # Example: "ViT-B-32", "laion2b_s34b_b79k" for OpenCLIP
         self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            "ViT-B-32", pretrained="laion2b_s34b_b79k"
+            "MobileCLIP-S0", pretrained="apple"
         )
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
