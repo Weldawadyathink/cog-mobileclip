@@ -8,7 +8,7 @@ import numpy as np
 class Predictor(BasePredictor):
     def setup(self):
         self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            "MobileCLIP-S0", pretrained="apple"
+            "MobileCLIP-S1", pretrained="apple"
         )
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
