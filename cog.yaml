@@ -10,14 +10,14 @@ build:
   #   - "libgl1-mesa-glx"
   #   - "libglib2.0-0"
 
-  # python version in the form '3.11' or '3.11.4'
   python_version: "3.11"
 
-  # path to a Python requirements.txt file
-  python_requirements: requirements.txt
-
-  # enable fast boots
-  # fast: true
+  python_packages:
+    - "torch==1.13.1" # Specify torch version for compatibility
+    - "torchvision==0.14.1" # Specify torchvision version for compatibility
+    - "open_clip_torch==2.20.0" # OpenCLIP library
+    - "Pillow==9.4.0" # Python Imaging Library for image handling
+    - "numpy==1.23.5" # Numerical computing library
 
   # commands run after the environment is setup
   # run:
