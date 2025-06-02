@@ -1,32 +1,24 @@
-import cog
+from cog import BasePredictor, Path, Input
 import torch
 from PIL import Image
 import open_clip
 import io
 import numpy as np
 
-class Predictor(cog.BasePredictor):
+class Predictor(BasePredictor):
     def setup(self):
-        """
-        Loads the model and the preprocessor into memory to make running multiple
-        predictions efficient.
-        """
-        print("Loading OpenCLIP model...")
         self.model, _, self.preprocess = open_clip.create_model_and_transforms(
             "MobileCLIP-S0", pretrained="apple"
         )
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
-        self.model.eval() # Set model to evaluation mode
+        self.model.eval()
         print(f"Model loaded on device: {self.device}")
 
-    # Define inputs for the predict method.
-    # Both image and text_string are optional, but one must be provided.
-    @cog.input("image", type=cog.Path, default=None,
-               help="Input image to get embedding for. Provide either an image OR a text string, not both.")
-    @cog.input("text_string", type=str, default=None,
-               help="Input text string to get embedding for. Provide either an image OR a text string, not both.")
-    def predict(self, image: cog.Path = None, text_string: str = None) -> dict:
+    def predict(self,
+        image: Path = Input(description="Image url to generate embedding for", default=None),
+        text_string: str = Input(description="Text to generate embedding for", default=None)
+    ) -> dict:
         """
         Runs a prediction to get the embedding for either an input image or a text string.
         """
