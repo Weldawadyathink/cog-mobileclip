@@ -20,50 +20,58 @@ class Predictor(cog.BasePredictor):
         self.model.eval() # Set model to evaluation mode
         print(f"Model loaded on device: {self.device}")
 
-    @cog.input("image", type=cog.Path, help="Input image to analyze")
-    @cog.input("text_prompts", type=str,
-               help="Comma-separated text prompts (e.g., 'a cat, a dog, a car')")
-    def predict(self, image: cog.Path, text_prompts: str) -> dict:
+    # Define inputs for the predict method.
+    # Both image and text_string are optional, but one must be provided.
+    @cog.input("image", type=cog.Path, default=None,
+               help="Input image to get embedding for. Provide either an image OR a text string, not both.")
+    @cog.input("text_string", type=str, default=None,
+               help="Input text string to get embedding for. Provide either an image OR a text string, not both.")
+    def predict(self, image: cog.Path = None, text_string: str = None) -> dict:
         """
-        Runs a single prediction on the model.
+        Runs a prediction to get the embedding for either an input image or a text string.
         """
-        print(f"Processing image: {image}")
-        print(f"Text prompts: {text_prompts}")
-
-        # Load the image
-        with open(image, "rb") as f:
-            pil_image = Image.open(io.BytesIO(f.read())).convert("RGB")
-
-        # Preprocess the image
-        image_input = self.preprocess(pil_image).unsqueeze(0).to(self.device)
-
-        # Tokenize the text prompts
-        prompts_list = [p.strip() for p in text_prompts.split(',')]
-        text_input = open_clip.tokenize(prompts_list).to(self.device)
+        # Ensure exactly one input is provided
+        if image is None and text_string is None:
+            raise ValueError("You must provide either an 'image' or a 'text_string' input.")
+        if image is not None and text_string is not None:
+            raise ValueError("You must provide either an 'image' or a 'text_string' input, not both.")
 
         with torch.no_grad():
-            image_features = self.model.encode_image(image_input)
-            text_features = self.model.encode_text(text_input)
+            if image is not None:
+                print(f"Generating embedding for image: {image}")
+                # Load the image
+                with open(image, "rb") as f:
+                    pil_image = Image.open(io.BytesIO(f.read())).convert("RGB")
 
-            # Normalize features
-            image_features /= image_features.norm(dim=-1, keepdim=True)
-            text_features /= text_features.norm(dim=-1, keepdim=True)
+                # Preprocess the image
+                image_input = self.preprocess(pil_image).unsqueeze(0).to(self.device)
+                image_features = self.model.encode_image(image_input)
 
-            # Calculate cosine similarity
-            # Scores will be a tensor of shape (1, num_prompts)
-            similarity = (image_features @ text_features.T).squeeze(0)
+                # Normalize features (standard practice for CLIP embeddings)
+                image_features /= image_features.norm(dim=-1, keepdim=True)
 
-            # Convert to numpy array and then to a list for JSON serialization
-            similarity_scores = similarity.cpu().numpy().tolist()
+                # Convert to list for JSON serialization. [0] is used to remove the batch dimension.
+                embedding = image_features.cpu().numpy().tolist()[0]
 
-        # Create a dictionary mapping prompts to their similarity scores
-        results = {
-            "image_path": str(image),
-            "text_prompts": prompts_list,
-            "similarity_scores": {prompt: score for prompt, score in zip(prompts_list, similarity_scores)},
-            "top_match": prompts_list[np.argmax(similarity_scores)]
-        }
+                return {
+                    "input_type": "image",
+                    "embedding": embedding
+                }
 
-        print("Prediction complete.")
-        return results
+            elif text_string is not None:
+                print(f"Generating embedding for text: '{text_string}'")
+                # Tokenize the text prompt
+                text_input = open_clip.tokenize([text_string]).to(self.device)
+                text_features = self.model.encode_text(text_input)
+
+                # Normalize features
+                text_features /= text_features.norm(dim=-1, keepdim=True)
+
+                # Convert to list for JSON serialization. [0] is used to remove the batch dimension.
+                embedding = text_features.cpu().numpy().tolist()[0]
+
+                return {
+                    "input_type": "text",
+                    "embedding": embedding
+                }
 
