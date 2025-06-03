@@ -78,8 +78,8 @@ class Predictor(BasePredictor):
                 embedding = text_features.cpu().numpy().tolist()[0]
 
                 return {
-                    "input_type": "image",
-                    "input": text,
+                    "input_type": "text",
+                    "input": str(text),
                     "embedding": embedding,
                 }
 
