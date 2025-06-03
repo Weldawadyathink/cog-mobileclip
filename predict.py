@@ -1,9 +1,16 @@
-from cog import BasePredictor, Path, Input
+from cog import BasePredictor, BaseModel, Path, Input
 import torch
 from PIL import Image
 import open_clip
 import io
 import numpy as np
+from typing import List
+import requests
+
+class Output(BaseModel):
+    input_type: str
+    input: str
+    embedding: List[float]
 
 class Predictor(BasePredictor):
     def setup(self):
@@ -11,6 +18,8 @@ class Predictor(BasePredictor):
             "MobileCLIP-S1",
             pretrained="/weights/open_clip_pytorch_model.bin"
         )
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.model.to(self.device)
         self.model.eval()
         self.tokenizer = open_clip.get_tokenizer(
             "MobileCLIP-S1",
@@ -19,9 +28,9 @@ class Predictor(BasePredictor):
         print(f"Model loaded")
 
     def predict(self,
-        image: Path = Input(description="Image url to generate embedding for", default=None),
+        image: str = Input(description="Image url to generate embedding for", default=None),
         text: str = Input(description="Text to generate embedding for", default=None)
-    ) -> dict:
+    ) -> Output:
         """
         Runs a prediction to get the embedding for either an input image or a text string.
         """
@@ -35,11 +44,13 @@ class Predictor(BasePredictor):
             if image is not None:
                 print(f"Generating embedding for image: {image}")
                 # Load the image
-                with open(image, "rb") as f:
-                    pil_image = Image.open(io.BytesIO(f.read())).convert("RGB")
+                response = requests.get(image, stream=True)
+                response.raise_for_status()
+                image_data = io.BytesIO(response.content)
+                pil_image = Image.open(image_data)
 
                 # Preprocess the image
-                image_input = self.preprocess(pil_image).unsqueeze(0).to(self.device)
+                image_input = self.preprocess(pil_image).unsqueeze(0)
                 image_features = self.model.encode_image(image_input)
 
                 # Normalize features (standard practice for CLIP embeddings)
@@ -50,7 +61,8 @@ class Predictor(BasePredictor):
 
                 return {
                     "input_type": "image",
-                    "embedding": embedding
+                    "input": image,
+                    "embedding": embedding,
                 }
 
             elif text is not None:
