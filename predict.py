@@ -8,12 +8,15 @@ import numpy as np
 class Predictor(BasePredictor):
     def setup(self):
         self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            "MobileCLIP-S1", pretrained="/weights/open_clip_pytorch_model.bin"
+            "MobileCLIP-S1",
+            pretrained="/weights/open_clip_pytorch_model.bin"
         )
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model.to(self.device)
         self.model.eval()
-        print(f"Model loaded on device: {self.device}")
+        self.tokenizer = open_clip.get_tokenizer(
+            "MobileCLIP-S1",
+            # pretrained="/weights/open_clip_pytorch_model.bin"
+        )
+        print(f"Model loaded")
 
     def predict(self,
         image: Path = Input(description="Image url to generate embedding for", default=None),
@@ -53,17 +56,17 @@ class Predictor(BasePredictor):
             elif text is not None:
                 print(f"Generating embedding for text: '{text}'")
                 # Tokenize the text prompt
-                text_input = open_clip.tokenize([text]).to(self.device)
-                text_features = self.model.encode_text(text_input)
+                tokens = self.tokenizer([text])
+                # text_features = self.model.encode_text(tokens)
 
                 # Normalize features
-                text_features /= text_features.norm(dim=-1, keepdim=True)
+                # text_features /= text_features.norm(dim=-1, keepdim=True)
 
                 # Convert to list for JSON serialization. [0] is used to remove the batch dimension.
-                embedding = text_features.cpu().numpy().tolist()[0]
+                # embedding = text_features.cpu().numpy().tolist()[0]
 
                 return {
                     "input_type": "text",
-                    "embedding": embedding
+                    "embedding": tokens
                 }
 
