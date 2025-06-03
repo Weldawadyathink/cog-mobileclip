@@ -8,7 +8,7 @@ import numpy as np
 class Predictor(BasePredictor):
     def setup(self):
         self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            "MobileCLIP-S1", pretrained="apple"
+            "MobileCLIP-S1", pretrained="/weights/open_clip_pytorch_model.bin"
         )
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
@@ -17,15 +17,15 @@ class Predictor(BasePredictor):
 
     def predict(self,
         image: Path = Input(description="Image url to generate embedding for", default=None),
-        text_string: str = Input(description="Text to generate embedding for", default=None)
+        text: str = Input(description="Text to generate embedding for", default=None)
     ) -> dict:
         """
         Runs a prediction to get the embedding for either an input image or a text string.
         """
         # Ensure exactly one input is provided
-        if image is None and text_string is None:
+        if image is None and text is None:
             raise ValueError("You must provide either an 'image' or a 'text_string' input.")
-        if image is not None and text_string is not None:
+        if image is not None and text is not None:
             raise ValueError("You must provide either an 'image' or a 'text_string' input, not both.")
 
         with torch.no_grad():
@@ -50,10 +50,10 @@ class Predictor(BasePredictor):
                     "embedding": embedding
                 }
 
-            elif text_string is not None:
-                print(f"Generating embedding for text: '{text_string}'")
+            elif text is not None:
+                print(f"Generating embedding for text: '{text}'")
                 # Tokenize the text prompt
-                text_input = open_clip.tokenize([text_string]).to(self.device)
+                text_input = open_clip.tokenize([text]).to(self.device)
                 text_features = self.model.encode_text(text_input)
 
                 # Normalize features

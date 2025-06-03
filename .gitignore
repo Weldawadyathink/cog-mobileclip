@@ -1,2 +1,3 @@
 .cog
 venv
+__pycache__
