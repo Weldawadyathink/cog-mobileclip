@@ -67,18 +67,19 @@ class Predictor(BasePredictor):
 
             elif text is not None:
                 print(f"Generating embedding for text: '{text}'")
-                # Tokenize the text prompt
+
                 tokens = self.tokenizer([text])
-                # text_features = self.model.encode_text(tokens)
+                text_features = self.model.encode_text(tokens)
 
                 # Normalize features
-                # text_features /= text_features.norm(dim=-1, keepdim=True)
+                text_features /= text_features.norm(dim=-1, keepdim=True)
 
                 # Convert to list for JSON serialization. [0] is used to remove the batch dimension.
-                # embedding = text_features.cpu().numpy().tolist()[0]
+                embedding = text_features.cpu().numpy().tolist()[0]
 
                 return {
-                    "input_type": "text",
-                    "embedding": tokens
+                    "input_type": "image",
+                    "input": text,
+                    "embedding": embedding,
                 }
 
