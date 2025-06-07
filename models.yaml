@@ -1,0 +1,8 @@
+# A list of OpenCLIP models to be packaged by Cog.
+# Each item in the list is a "map" of key-value pairs.
+
+- name: mobileclip-s1
+  weights_repo: "https://huggingface.co/apple/MobileCLIP-S1-OpenCLIP"
+  openclip_model_name: "MobileCLIP-S1"
+  pretrained_file: "open_clip_pytorch_model.bin"
+  docker_image_name: "r8.im/weldawadyathink/mobileclip"
