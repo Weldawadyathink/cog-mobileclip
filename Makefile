@@ -13,7 +13,23 @@ ALL_OUTPUT_FILES := $(foreach name,$(MODEL_NAMES), \
                       $(patsubst $(TEMPLATES_DIR)/%,$(OUTPUT_DIR)/$(name)/%,$(TEMPLATE_FILES)))
 
 
-.PHONY: generate clean list
+.PHONY: generate clean list build push
+
+
+build: generate
+	@$(foreach name,$(MODEL_NAMES), \
+		echo "🔨 Cog build for $(name)"; \
+		cd $(OUTPUT_DIR)/$(name) && cog build && cd ../..; \
+	)
+	@echo "✅ All models built successfully."
+
+
+push: generate
+	@$(foreach name,$(MODEL_NAMES), \
+		echo "🔨 Cog build and push for $(name)"; \
+		cd $(OUTPUT_DIR)/$(name) && cog push && cd ../..; \
+	)
+	@echo "✅ All models built successfully."
 
 
 generate: $(ALL_OUTPUT_FILES)
@@ -23,9 +39,9 @@ generate: $(ALL_OUTPUT_FILES)
 list:
 	@echo "Discovered Models:"
 	@$(foreach name,$(MODEL_NAMES),echo "  - $(name)";)
-	@echo "\nDiscovered Templates:"
+	@echo "Discovered Templates:"
 	@$(foreach tpl,$(TEMPLATE_FILES),echo "  - $(notdir $(tpl))";)
-	@echo "\nWill Generate:"
+	@echo "Will Generate:"
 	@$(foreach file,$(ALL_OUTPUT_FILES),echo "  - $(file)";)
 
 

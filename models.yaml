@@ -5,10 +5,10 @@
   weights_repo: "https://huggingface.co/apple/MobileCLIP-S1-OpenCLIP"
   openclip_model_name: "MobileCLIP-S1"
   pretrained_file: "open_clip_pytorch_model.bin"
-  docker_image_name: "r8.im/weldawadyathink/mobileclip"
+  docker_image_name: "r8.im/weldawadyathink/openclip-mobileclip-s1"
 
 - name: mobileclip-s2
   weights_repo: "https://huggingface.co/apple/MobileCLIP-S2-OpenCLIP"
   openclip_model_name: "MobileCLIP-S2"
   pretrained_file: "open_clip_pytorch_model.bin"
-  docker_image_name: "r8.im/weldawadyathink/mobileclip-s2"
+  docker_image_name: "r8.im/weldawadyathink/openclip-mobileclip-s2"
