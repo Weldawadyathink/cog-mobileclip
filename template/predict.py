@@ -15,16 +15,13 @@ class NamedEmbedding(BaseModel):
 class Predictor(BasePredictor):
     def setup(self):
         self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            "MobileCLIP-S1",
-            pretrained="/weights/open_clip_pytorch_model.bin"
+            "${openclip_model_name}",
+            pretrained="/weights/${pretrained_file}"
         )
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
         self.model.eval()
-        self.tokenizer = open_clip.get_tokenizer(
-            "MobileCLIP-S1",
-            # pretrained="/weights/open_clip_pytorch_model.bin"
-        )
+        self.tokenizer = open_clip.get_tokenizer("${openclip_model_name}")
         print(f"Model loaded")
 
     def embedImageUrl(self, imageUrl):

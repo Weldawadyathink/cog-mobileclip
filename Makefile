@@ -42,10 +42,8 @@ $(ALL_OUTPUT_FILES): $(OUTPUT_DIR)/% : $$(TEMPLATES_DIR)/$$(notdir $$*) | $$(OUT
 
 	@echo "🔨 Generating $@ from $(TEMPLATE_FILE_PATH)"
 
-	$(eval YQ_QUERY := '.[] | select(.name == "$(MODEL_NAME)")')
-
-	@export $$(yq '.[] | select(.name == "mobileclip-s1") | to_entries | .[] | .key + "=" + .value' models.yaml)
-	@envsubst < "$(TEMPLATE_FILE_PATH)" > "$@"
+	@export $$(yq '.[] | select(.name == "$(MODEL_NAME)") | to_entries | .[] | .key + "=" + .value' models.yaml); \
+	envsubst < "$(TEMPLATE_FILE_PATH)" > "$@"
 
 
 $(OUTPUT_DIR)/%/:

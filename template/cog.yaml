@@ -2,11 +2,11 @@
 # Reference: https://cog.run/yaml
 
 # Generation Parameters
-# Name: $(name)
-# Weights Repo: $(weights_repo)
-# OpenClip Model Name: $(openclip_model_name)
-# Pretrained File: $(pretrained_file)
-# Docker Image Name: $(docker_image_name)
+# Name: ${name}
+# Weights Repo: ${weights_repo}
+# OpenClip Model Name: ${openclip_model_name}
+# Pretrained File: ${pretrained_file}
+# Docker Image Name: ${docker_image_name}
 
 build:
   gpu: false
@@ -20,9 +20,9 @@ build:
   python_requirements: requirements.txt
 
   run:
-    - git clone $(weights_repo) /weights
+    - git clone ${weights_repo} /weights
     - cd weights && git lfs pull
 
 predict: "predict.py:Predictor"
 
-image: $(docker_image_name)
+image: ${docker_image_name}
