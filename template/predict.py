@@ -29,6 +29,8 @@ class Predictor(BasePredictor):
     def embedImageUrl(self, imageUrl):
         print(f"Downloading {imageUrl}")
         image = Image.open(BytesIO(requests.get(imageUrl).content))
+        if image.mode in ('RGBA', 'LA', 'P'):
+            image = image.convert('RGB')
         with torch.no_grad(), torch.cuda.amp.autocast():
             image = self.preprocess(image).unsqueeze(0)
             embedding = self.model.encode_image(image)
