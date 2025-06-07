@@ -10,6 +10,9 @@
 build:
   gpu: false
 
+  system_packages:
+    - wget
+
   python_version: "3.11"
 
   python_requirements: requirements.txt
