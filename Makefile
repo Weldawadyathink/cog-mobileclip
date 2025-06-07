@@ -17,22 +17,25 @@ ALL_OUTPUT_FILES := $(foreach name,$(MODEL_NAMES), \
 
 
 build: generate
-	@$(foreach name,$(MODEL_NAMES), \
-		echo "🔨 Cog build for $(name)"; \
-		cd $(OUTPUT_DIR)/$(name) && cog build && cd ../..; \
-	)
+	@for name in $(MODEL_NAMES); do \
+	  echo "🔨 Cog build and push for $$name"; \
+	  cd $(OUTPUT_DIR)/$$name && cog build && cd ../..; \
+	done
 	@echo "✅ All models built successfully."
 
 
 push: generate
-	@$(foreach name,$(MODEL_NAMES), \
-		echo "🔨 Cog build and push for $(name)"; \
-		cd $(OUTPUT_DIR)/$(name) && cog push && cd ../..; \
-	)
+	@for name in $(MODEL_NAMES); do \
+	  echo "🔨 Cog build and push for $$name"; \
+	  cd $(OUTPUT_DIR)/$$name && cog push && cd ../..; \
+	done
 	@echo "✅ All models built successfully."
 
 
 generate: $(ALL_OUTPUT_FILES)
+	@for name in $(MODEL_NAMES); do \
+		cp -r common/* $(OUTPUT_DIR)/$$name; \
+	done
 	@echo "✅ All models generated successfully."
 
 

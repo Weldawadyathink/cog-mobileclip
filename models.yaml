@@ -1,26 +1,25 @@
-# A list of OpenCLIP models to be packaged by Cog.
-# Each item in the list is a "map" of key-value pairs.
+
+- name: mobileclip-s0
+  weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_s0.pt"
+  pretrained_file: mobileclip_s0.pt
+  docker_image_name: "r8.im/weldawadyathink/mobileclip-s0"
 
 - name: mobileclip-s1
-  weights_repo: "https://huggingface.co/apple/MobileCLIP-S1-OpenCLIP"
-  openclip_model_name: "MobileCLIP-S1"
-  pretrained_file: "open_clip_pytorch_model.bin"
-  docker_image_name: "r8.im/weldawadyathink/openclip-mobileclip-s1"
+  weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_s1.pt"
+  pretrained_file: mobileclip_s1.pt
+  docker_image_name: "r8.im/weldawadyathink/mobileclip-s1"
 
 - name: mobileclip-s2
-  weights_repo: "https://huggingface.co/apple/MobileCLIP-S2-OpenCLIP"
-  openclip_model_name: "MobileCLIP-S2"
-  pretrained_file: "open_clip_pytorch_model.bin"
-  docker_image_name: "r8.im/weldawadyathink/openclip-mobileclip-s2"
+  weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_s2.pt"
+  pretrained_file: mobileclip_s2.pt
+  docker_image_name: "r8.im/weldawadyathink/mobileclip-s2"
 
 - name: mobileclip-b
-  weights_repo: "https://huggingface.co/apple/MobileCLIP-B-OpenCLIP"
-  openclip_model_name: "MobileCLIP-B"
-  pretrained_file: "open_clip_pytorch_model.bin"
-  docker_image_name: "r8.im/weldawadyathink/openclip-mobileclip-b"
+  weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_b.pt"
+  pretrained_file: mobileclip_b.pt
+  docker_image_name: "r8.im/weldawadyathink/mobileclip-b"
 
-- name: mobileclip-b-lt
-  weights_repo: "https://huggingface.co/apple/MobileCLIP-B-LT-OpenCLIP"
-  openclip_model_name: "MobileCLIP-B-LT"
-  pretrained_file: "open_clip_pytorch_model.bin"
-  docker_image_name: "r8.im/weldawadyathink/openclip-mobileclip-b-lt"
+- name: mobileclip-blt
+  weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_blt.pt"
+  pretrained_file: mobileclip_blt.pt
+  docker_image_name: "r8.im/weldawadyathink/mobileclip-blt"

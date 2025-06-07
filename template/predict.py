@@ -1,7 +1,7 @@
 from cog import BasePredictor, BaseModel, Input
 import torch
 from PIL import Image
-import open_clip
+import mobileclip
 from io import BytesIO
 import numpy as np
 from typing import List
@@ -14,20 +14,22 @@ class NamedEmbedding(BaseModel):
 
 class Predictor(BasePredictor):
     def setup(self):
-        self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            "${openclip_model_name}",
+        self.model, _, self.preprocess = mobileclip.create_model_and_transforms(
+            "${name}",
             pretrained="/weights/${pretrained_file}"
         )
+        self.tokenizer = mobileclip.get_tokenizer("${name}")
+
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
         self.model.eval()
-        self.tokenizer = open_clip.get_tokenizer("${openclip_model_name}")
+
         print(f"Model loaded")
 
     def embedImageUrl(self, imageUrl):
         print(f"Downloading {imageUrl}")
         image = Image.open(BytesIO(requests.get(imageUrl).content))
-        with torch.no_grad():
+        with torch.no_grad(), torch.cuda.amp.autocast():
             image = self.preprocess(image).unsqueeze(0)
             embedding = self.model.encode_image(image)
             embedding /= embedding.norm(dim=-1, keepdim=True)
@@ -39,7 +41,7 @@ class Predictor(BasePredictor):
 
     def embedText(self, text):
         print(f"Embedding text {text}")
-        with torch.no_grad():
+        with torch.no_grad(), torch.cuda.amp.autocast():
             tokens = self.tokenizer([text])
             embedding = self.model.encode_text(tokens)
             embedding /= embedding.norm(dim=-1, keepdim=True)
