@@ -12,3 +12,15 @@
   openclip_model_name: "MobileCLIP-S2"
   pretrained_file: "open_clip_pytorch_model.bin"
   docker_image_name: "r8.im/weldawadyathink/openclip-mobileclip-s2"
+
+- name: mobileclip-b
+  weights_repo: "https://huggingface.co/apple/MobileCLIP-B-OpenCLIP"
+  openclip_model_name: "MobileCLIP-B"
+  pretrained_file: "open_clip_pytorch_model.bin"
+  docker_image_name: "r8.im/weldawadyathink/openclip-mobileclip-b"
+
+- name: mobileclip-b-lt
+  weights_repo: "https://huggingface.co/apple/MobileCLIP-B-LT-OpenCLIP"
+  openclip_model_name: "MobileCLIP-B-LT"
+  pretrained_file: "open_clip_pytorch_model.bin"
+  docker_image_name: "r8.im/weldawadyathink/openclip-mobileclip-b-lt"
