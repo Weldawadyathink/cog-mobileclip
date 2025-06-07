@@ -1,25 +1,25 @@
 
-- name: mobileclip-s0
+- name: mobileclip_s0
   weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_s0.pt"
   pretrained_file: mobileclip_s0.pt
   docker_image_name: "r8.im/weldawadyathink/mobileclip-s0"
 
-- name: mobileclip-s1
+- name: mobileclip_s1
   weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_s1.pt"
   pretrained_file: mobileclip_s1.pt
   docker_image_name: "r8.im/weldawadyathink/mobileclip-s1"
 
-- name: mobileclip-s2
+- name: mobileclip_s2
   weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_s2.pt"
   pretrained_file: mobileclip_s2.pt
   docker_image_name: "r8.im/weldawadyathink/mobileclip-s2"
 
-- name: mobileclip-b
+- name: mobileclip_b
   weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_b.pt"
   pretrained_file: mobileclip_b.pt
   docker_image_name: "r8.im/weldawadyathink/mobileclip-b"
 
-- name: mobileclip-blt
+- name: mobileclip_blt
   weights_url: "https://docs-assets.developer.apple.com/ml-research/datasets/mobileclip/mobileclip_blt.pt"
   pretrained_file: mobileclip_blt.pt
   docker_image_name: "r8.im/weldawadyathink/mobileclip-blt"
