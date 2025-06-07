@@ -7,7 +7,7 @@ MODEL_CONFIG := models.yaml
 
 TEMPLATE_FILES := $(shell find $(TEMPLATES_DIR) -maxdepth 1 -type f)
 
-MODEL_NAMES := $(shell command -v yq >/dev/null 2>&1 && [ -f $(MODEL_CONFIG) ] && yq '.[] | .name' $(MODEL_CONFIG) || echo "")
+MODEL_NAMES := $(shell yq '.[] | .name' $(MODEL_CONFIG))
 
 ALL_OUTPUT_FILES := $(foreach name,$(MODEL_NAMES), \
                       $(patsubst $(TEMPLATES_DIR)/%,$(OUTPUT_DIR)/$(name)/%,$(TEMPLATE_FILES)))
