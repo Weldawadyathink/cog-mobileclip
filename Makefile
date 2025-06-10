@@ -18,7 +18,7 @@ ALL_OUTPUT_FILES := $(foreach name,$(MODEL_NAMES), \
 
 build: generate
 	@for name in $(MODEL_NAMES); do \
-	  echo "🔨 Cog build and push for $$name"; \
+	  echo "🔨 Cog build for $$name"; \
 	  cd $(OUTPUT_DIR)/$$name && cog build && cd ../..; \
 	done
 	@echo "✅ All models built successfully."
